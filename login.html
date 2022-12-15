@@ -14,7 +14,7 @@
                 const pass = document.getElementById('pass').value
 
                 // fetch com get passa os parametros via query params
-                const response = await fetch(`pizzariajulioneres.herokuapp.com/login?user=${user}&pass=${pass}`);
+                const response = await fetch(`https://pizzariajulioneres.herokuapp.com/login?user=${user}&pass=${pass}`);
     
                 // se retornar ok redireciona o usuário para tela de produtos
                 if(response.ok) window.location = "produtos.html";
