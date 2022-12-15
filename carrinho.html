@@ -18,7 +18,7 @@
         const pedidoIds = sessionStorage.getItem('carrinho_produtos').split(",");
         
         // resgata a lista de produtos para pegar informações e montar o checkout
-        const response = await fetch('http://pizzariajulioneres.herokuapp.com/products');
+        const response = await fetch('pizzariajulioneres.herokuapp.com/products');
         // parsear a resposta para JSON
         const produtos = await response.json();
 
