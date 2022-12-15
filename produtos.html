@@ -11,7 +11,7 @@
             var carrinhoPizzas = [];
 
             async function carregarProdutos(){
-                const response = await fetch('pizzariajulioneres.herokuapp.com/products');
+                const response = await fetch('https://pizzariajulioneres.herokuapp.com/products');
                 // parsear a resposta para JSON
                 const produtos = await response.json();
 
