@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastrar</title>
+        <link rel="stylesheet" href="estilos.css">
+    </head>
+    <script>
+        // função que será chamada ao clicar no botão CADASTRAR
+        async function cadastrar() {
+            // resgatando valores que o usuário digitou
+            const nome = document.getElementById('nome').value
+            const pass = document.getElementById('pass').value
+            const email = document.getElementById('email').value
+
+            // fetch com post precisa passar um objeto informando o metodo, headers e o corpo com os valores
+            const rawResponse = await fetch('http://pizzariajulioneres.herokuapp.com/register', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nome, pass, email})
+            });
+
+            const content = await rawResponse;
+
+            // se retornar ok redireciona o usuário para tela de produtos
+            if(content.ok) window.location = "produtos.html";
+        }
+    </script>
+    <body>
+        <section class="area-login">
+            <div class="login">
+                <h2><b>Cadastre-se:</b></h2>
+                <form action="javascript:cadastrar()">
+                    <input id="nome" type="text" name="nome" placeholder="Nome"><br>
+                    <input id="pass" type="password" name="passaword" placeholder="Senha"><br>
+                    <input id="email" type="text" name="email" placeholder="Email"><br>
+                    <input type="submit" value="Cadastrar">
+                </form>
+            </div>
+        </section>
+    </body>
+</html>

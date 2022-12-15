@@ -1,0 +1,94 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fechamento de Compra</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script>
+      // ao carregar a tela chamar função carregarPedido
+      window.onload = carregarPedido;
+      var valorTotal = 0;
+      var produtosCheckout = [];
+
+      async function carregarPedido() {
+        // resgata os ids das pizzas na seção do usuário e quebra por virgulas
+        const pedidoIds = sessionStorage.getItem('carrinho_produtos').split(",");
+        
+        // resgata a lista de produtos para pegar informações e montar o checkout
+        const response = await fetch('http://localhost:8080/products');
+        // parsear a resposta para JSON
+        const produtos = await response.json();
+
+        // função para encontrar as pizzas pelo id
+        produtosCheckout = pedidoIds.map(item => produtos.find(({idpizza}) => idpizza.toString() === item));
+
+        produtosCheckout.forEach(item => {
+          // soma valor total
+          valorTotal += item.valor;
+
+          // monta html de resumo do pedido
+          document.getElementById("pedidos").innerHTML +=
+                                "<p>"+item.sabor+"</p>\
+                                <p>"+item.valor+"</p>"
+        });
+
+        // atribui valores para resumo do pedido
+        document.getElementById("qtdTotal").innerHTML = produtosCheckout.length
+        document.getElementById("Total").innerHTML = Math.round(valorTotal * 100) / 100;
+      }
+
+      // função que será chamada ao clicar no botão PAGAR
+      async function pagar() {
+        // fetch com post precisa passar um objeto informando o metodo, headers e o corpo com os valores
+        const rawResponse = await fetch('http://localhost:8080/checkout', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ valorTotal, qtdProds: produtosCheckout.length })
+            });
+
+            const content = await rawResponse;
+
+            // se retornar ok redireciona o usuário para tela de produtos e exibe alert
+            if(content.ok) {
+              alert("Pedido realizado com sucesso!!")
+              window.location = "produtos.html";
+            }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="checkout">
+      <div class="summary">
+        <h1>Resumo do Pedido:</h1>
+
+        <h3>Meu pedido (<span id="qtdTotal">0</span>)</h3>
+
+        <div id="pedidos"></div>
+
+        <b>Total: <span id="Total">0,00</span></b>
+      </div>
+
+      <div class="payment">
+        <h1>Pagamento</h1>
+
+          <div class="payment">
+            <form action="javascript:pagar()">
+              <input class="form-control" placeholder="Nome" type="text" />
+              <input class="form-control" placeholder="Endereço" type="text" />
+              <input class="form-control" placeholder="Número do cartão" type="text" />
+              <input class="form-control" placeholder="Nome no cartão" type="text" />
+              <input class="form-control" placeholder="Validade" type="text" />
+              <input class="form-control" placeholder="CVV" type="text" />
+              <input class="payment-button" type="submit" value="Pagar" />
+            </form>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>

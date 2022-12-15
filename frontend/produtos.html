@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Pizzaria meninas super poderosas </title>
+        <link rel="stylesheet" href="estilos.css">
+        <script>
+            // ao carregar a tela chamar função carregarProdutos
+            window.onload = carregarProdutos;
+            var carrinhoPizzas = [];
+
+            async function carregarProdutos(){
+                const response = await fetch('http://localhost:8080/products');
+                // parsear a resposta para JSON
+                const produtos = await response.json();
+
+                // variável para concatenar as divs dos produtos
+                let listaPizzas = "";
+                produtos.forEach(pizza => {
+                    listaPizzas +=
+                    `<div class="product">
+                        <img src="imagens/pizza_original.jpg"/>
+                        <div class="productInfos">
+                            <h3>${pizza.sabor}</h3>
+                            <p>${pizza.descricao}</p>
+                            <span>${pizza.valor}</span>
+                            <button onclick="adicionarCarrinho(${pizza.idpizza})">Adicionar ao carrinho</button>
+                        </div>
+                    </div>`
+                });
+
+                // atribui html montado com as pizzas para dentro da seção de produtos
+                document.getElementById('products').innerHTML = listaPizzas;
+            }
+
+            function adicionarCarrinho(pizzaid){
+                carrinhoPizzas.push(pizzaid);
+                // atribui ao carrinho um texto com a quantidade
+                document.getElementById('carrinho').innerHTML = `${carrinhoPizzas.length} pizza(s) no carrinho`;
+                alert("Pizza adicionada ao carrinho!");
+            }
+
+            function carregarCarrinho() {
+                // salva os ids das pizzas do carrinho na sessão do usuário
+                sessionStorage.setItem('carrinho_produtos', carrinhoPizzas);
+                // redireciona o usuário para tela de checkout
+                window.location = "carrinho.html"
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <p class="headerTitle">PIZZARIA MENINAS SUPER PODEROSAS</p>
+            <span id="carrinho" onclick="carregarCarrinho()">0 Pizzas no carrinho</span>
+        </header>
+        <section id="products">
+        </section>
+    </body>
+</html>

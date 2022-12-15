@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Entrar</title>
+        <link rel="stylesheet" href="estilos.css">
+        <script>
+            // função que será chamada ao clicar no botão LOGAR
+            async function entrar() {
+                // resgatando valores que o usuário digitou
+                const user = document.getElementById('email').value
+                const pass = document.getElementById('pass').value
+
+                // fetch com get passa os parametros via query params
+                const response = await fetch(`http://pizzariajulioneres.herokuapp.com/login?user=${user}&pass=${pass}`);
+    
+                // se retornar ok redireciona o usuário para tela de produtos
+                if(response.ok) window.location = "produtos.html";
+            }
+        </script>
+    </head>
+    <body>
+        <section class="area-login">
+            <div class="login">
+                <form action="javascript:entrar()">
+                    <h2><b>Entrar:</b></h2>
+                    <input id="email" type="text" name="email" placeholder="Email" autofocus><br>
+                    <input id="pass" type="password" name="passaword" placeholder="Senha"><br>
+                    <input type="submit" value="logar">
+                </form>
+                <p>Ainda não tem conta?<a href="cadastro.html">Criar conta</a></p>
+            </div>
+        </section>
+    </body>
+</html>
